@@ -7,10 +7,11 @@ namespace EconomicManagementAPP.Controllers
     public class AccountTypesController : Controller
     {
         private readonly IRepositorieAccountTypes repositorieAccountTypes;
-
-        public AccountTypesController(IRepositorieAccountTypes repositorieAccountTypes)
+        private readonly IServiceUser serviceUser;
+        public AccountTypesController(IRepositorieAccountTypes repositorieAccountTypes, IServiceUser serviceUser)
         {
             this.repositorieAccountTypes = repositorieAccountTypes;
+            this.serviceUser = serviceUser;
         }
 
         // Creamos index para ejecutar la interfaz
@@ -18,7 +19,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<IActionResult> Index()
         {
             // Simula que estamos logeados en la app.
-            var userId = 1;
+            var userId = serviceUser.GetUserId();
             var accountTypes = await repositorieAccountTypes.getAccounts(userId);
             return View(accountTypes);
         }
@@ -35,9 +36,7 @@ namespace EconomicManagementAPP.Controllers
                 return View(accountTypes);
             }
 
-            accountTypes.UserId = 1;
-            accountTypes.OrderAccount = 1;
-
+            accountTypes.UserId = serviceUser.GetUserId();
             // Validamos si ya existe antes de registrar
             var accountTypeExist =
                await repositorieAccountTypes.Exist(accountTypes.Name, accountTypes.UserId);
@@ -60,13 +59,13 @@ namespace EconomicManagementAPP.Controllers
         [HttpGet]
         public async Task<IActionResult> VerificaryAccountType(string Name)
         {
-            var UserId = 1;
+            var UserId = serviceUser.GetUserId();
             var accountTypeExist = await repositorieAccountTypes.Exist(Name, UserId);
 
             if (accountTypeExist)
             {
                 // permite acciones directas entre front y back
-                return Json($"The account {Name} already exist");                                                                
+                return Json($"The account {Name} already exist");
             }
 
             return Json(true);
@@ -76,7 +75,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpGet]
         public async Task<ActionResult> Modify(int id)
         {
-            var userId = 1;
+            var userId = serviceUser.GetUserId();
 
             var accountType = await repositorieAccountTypes.getAccountById(id, userId);
 
@@ -90,7 +89,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpPost]
         public async Task<ActionResult> Modify(AccountTypes accountTypes)
         {
-            var userId = 1;
+            var userId = serviceUser.GetUserId();
             var accountType = await repositorieAccountTypes.getAccountById(accountTypes.Id, userId);
 
             if (accountType is null)
@@ -105,7 +104,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var userId = 1;
+            var userId = serviceUser.GetUserId();
             var account = await repositorieAccountTypes.getAccountById(id, userId);
 
             if (account is null)
@@ -118,7 +117,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteAccount(int id)
         {
-            var userId = 1;
+            var userId = serviceUser.GetUserId();
             var account = await repositorieAccountTypes.getAccountById(id, userId);
 
             if (account is null)
@@ -128,6 +127,28 @@ namespace EconomicManagementAPP.Controllers
 
             await repositorieAccountTypes.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> OrderAccount([FromBody] int[] ids)
+        {
+            var userId = serviceUser.GetUserId();
+            var accountType = await repositorieAccountTypes.getAccounts(userId);
+            var idsAccountType = accountType.Select(x => x.Id);
+
+            var idsTypeAccountNotUser = ids.Except(idsAccountType).ToList();
+
+            if (idsTypeAccountNotUser.Count > 0)
+            {
+                return Forbid();
+            }
+
+            var typeAccountOrder = ids.Select((valor, index) =>
+                new AccountTypes() { Id = valor, OrderAccount = index + 1 }).AsEnumerable();
+
+            await repositorieAccountTypes.OrderAccount(typeAccountOrder);
+
+            return Ok();
         }
     }
 }

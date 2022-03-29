@@ -12,6 +12,7 @@ namespace EconomicManagementAPP.Services
         Task Modify(AccountTypes accountTypes);
         Task<AccountTypes> getAccountById(int id, int userId); // para el modify
         Task Delete(int id);
+        Task OrderAccount(IEnumerable<AccountTypes> accountTypesOrder);
     }
     public class RepositorieAccountTypes : IRepositorieAccountTypes
     {
@@ -26,9 +27,14 @@ namespace EconomicManagementAPP.Services
         {
             using var connection = new SqlConnection(connectionString);
             // Requiere el await - tambien requiere el Async al final de la query
-            var id = await connection.QuerySingleAsync<int>(@"INSERT INTO AccountTypes 
-                                                (Name, UserId, OrderAccount) 
-                                                VALUES (@Name, @UserId, @OrderAccount); SELECT SCOPE_IDENTITY();", accountTypes);
+            var id = await connection.QuerySingleAsync<int>
+                                                            ("AccountType_Insert",
+                                                            new
+                                                            {
+                                                                Name = accountTypes.Name,
+                                                                UserId = accountTypes.UserId
+                                                            },
+                                                        commandType: System.Data.CommandType.StoredProcedure);
             accountTypes.Id = id;
         }
 
@@ -82,6 +88,14 @@ namespace EconomicManagementAPP.Services
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync("DELETE AccountTypes WHERE Id = @Id", new { id });
+        }
+
+        //Ordenar por tipo de cuentas
+        public async Task OrderAccount(IEnumerable<AccountTypes> accountTypesOrder)
+        {
+            var query = "UPDATE accountTypes SET OrderAccount = @OrderAccount Where Id = @Id;";
+            using var connection = new SqlConnection(connectionString);
+            await connection.ExecuteAsync(query, accountTypesOrder);
         }
     }
 }

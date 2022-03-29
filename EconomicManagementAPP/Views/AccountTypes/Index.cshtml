@@ -32,3 +32,43 @@
         }
     </tbody>
 </table>
+
+@section Scripts {
+      <script>
+
+          const urlOrder = '@Url.Action("OrderAccount")';
+
+          $(function(){
+              $("#reordenable").sortable({
+                  stop: async function(e, ui){
+                      await updateOrder();
+                  }
+              });
+
+              async function updateOrder(){
+                  const ids = getIdsElements();
+                  await sendIdsBackend(ids);
+              }
+
+              function getIdsElements(){
+                  const ids = $(".ids").map(function(){
+                      return $(this).val();
+                  }).get();
+
+                  return ids;
+              }
+
+              async function sendIdsBackend(ids){
+                  var data = JSON.stringify(ids);
+
+                  await fetch(urlOrder, {
+                      method: 'POST',
+                      body: data,
+                      headers: {
+                          'Content-Type': 'application/json'
+                      }
+                  });
+              }
+          })
+      </script>
+  }
