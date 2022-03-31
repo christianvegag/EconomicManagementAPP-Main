@@ -28,7 +28,6 @@ namespace EconomicManagementAPP.Services
             var id = await connection.QuerySingleAsync<int>(
                 @"INSERT INTO Accounts (Name, AccountTypeId, Balance, Description)
                     VALUES (@Name, @AccountTypeId, @Balance, @Description);
-
                     SELECT SCOPE_IDENTITY();", account);
 
             account.Id = id;
