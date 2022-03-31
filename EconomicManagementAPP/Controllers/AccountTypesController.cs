@@ -29,28 +29,28 @@ namespace EconomicManagementAPP.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AccountTypes accountTypes)
+        public async Task<IActionResult> Create(AccountType accountType)
         {
             if (!ModelState.IsValid)
             {
-                return View(accountTypes);
+                return View(accountType);
             }
 
-            accountTypes.UserId = serviceUser.GetUserId();
+            accountType.UserId = serviceUser.GetUserId();
             // Validamos si ya existe antes de registrar
             var accountTypeExist =
-               await repositorieAccountTypes.Exist(accountTypes.Name, accountTypes.UserId);
+               await repositorieAccountTypes.Exist(accountType.Name, accountType.UserId);
 
             if (accountTypeExist)
             {
                 // AddModelError ya viene predefinido en .net
                 // nameOf es el tipo del campo
-                ModelState.AddModelError(nameof(accountTypes.Name),
-                    $"The account {accountTypes.Name} already exist.");
+                ModelState.AddModelError(nameof(accountType.Name),
+                    $"The account {accountType.Name} already exist.");
 
-                return View(accountTypes);
+                return View(accountType);
             }
-            await repositorieAccountTypes.Create(accountTypes);
+            await repositorieAccountTypes.Create(accountType);
             // Redireccionamos a la lista
             return RedirectToAction("Index");
         }
@@ -87,17 +87,17 @@ namespace EconomicManagementAPP.Controllers
             return View(accountType);
         }
         [HttpPost]
-        public async Task<ActionResult> Modify(AccountTypes accountTypes)
+        public async Task<ActionResult> Modify(AccountType accountType)
         {
             var userId = serviceUser.GetUserId();
-            var accountType = await repositorieAccountTypes.getAccountById(accountTypes.Id, userId);
+            var accountTypeExist = await repositorieAccountTypes.getAccountById(accountType.Id, userId);
 
-            if (accountType is null)
+            if (accountTypeExist is null)
             {
                 return RedirectToAction("NotFound", "Home");
             }
 
-            await repositorieAccountTypes.Modify(accountTypes);// el que llega
+            await repositorieAccountTypes.Modify(accountType);// el que llega
             return RedirectToAction("Index");
         }
         // Eliminar
@@ -144,7 +144,7 @@ namespace EconomicManagementAPP.Controllers
             }
 
             var typeAccountOrder = ids.Select((valor, index) =>
-                new AccountTypes() { Id = valor, OrderAccount = index + 1 }).AsEnumerable();
+                new AccountType() { Id = valor, OrderAccount = index + 1 }).AsEnumerable();
 
             await repositorieAccountTypes.OrderAccount(typeAccountOrder);
 

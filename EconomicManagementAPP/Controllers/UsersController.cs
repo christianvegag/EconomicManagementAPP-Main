@@ -24,7 +24,7 @@ namespace EconomicManagementAPP.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Users user)
+        public async Task<IActionResult> Create(User user)
         {
             if (!ModelState.IsValid)
             {
@@ -78,7 +78,7 @@ namespace EconomicManagementAPP.Controllers
             return View(user);
         }
         [HttpPost]
-        public async Task<ActionResult> Modify(Users user)
+        public async Task<ActionResult> Modify(User user)
         {
             var userExists = await repositorieUsers.GetUserById(user.Id);
 

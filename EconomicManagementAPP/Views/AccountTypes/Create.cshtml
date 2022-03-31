@@ -1,9 +1,11 @@
-﻿@model AccountTypes
+﻿@model AccountType
 @{
     ViewData["Title"] = "Account types";
 }
 
-<h1>Register account type</h1>
+<h1>Register Account Type</h1>
+<h5>Account type refers to how we can group accounts.
+     Examples: Loans, credit cards, etc.</h5>
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
 <form asp-action="Create">

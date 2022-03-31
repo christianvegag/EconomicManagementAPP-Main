@@ -6,11 +6,11 @@ namespace EconomicManagementAPP.Services
 {
     public interface IRepositorieUsers
     {
-        Task Create(Users user); // Se agrega task por el asincronismo
+        Task Create(User user); // Se agrega task por el asincronismo
         Task<bool> Exist(string Email, string StandarEmail);
-        Task<IEnumerable<Users>> GetUsers();
-        Task Modify(Users user);
-        Task<Users> GetUserById(int id); // para el modify
+        Task<IEnumerable<User>> GetUsers();
+        Task Modify(User user);
+        Task<User> GetUserById(int id); // para el modify
         Task Delete(int id);
     }
     public class RepositorieUsers : IRepositorieUsers
@@ -21,7 +21,7 @@ namespace EconomicManagementAPP.Services
         {
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
-        public async Task Create(Users user)
+        public async Task Create(User user)
         {
             using var connection = new SqlConnection(connectionString);
             var id = await connection.QuerySingleAsync<int>(@"INSERT INTO Users 
@@ -41,12 +41,12 @@ namespace EconomicManagementAPP.Services
             return exist == 1;
         }
 
-        public async Task<IEnumerable<Users>> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<Users>("SELECT Id, Email, StandarEmail FROM Users;");
+            return await connection.QueryAsync<User>("SELECT Id, Email, StandarEmail FROM Users;");
         }
-        public async Task Modify(Users user)
+        public async Task Modify(User user)
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"UPDATE Users SET 
@@ -55,11 +55,11 @@ namespace EconomicManagementAPP.Services
                                             WHERE Id = @Id", user);
         }
 
-        public async Task<Users> GetUserById(int id)
+        public async Task<User> GetUserById(int id)
         {
             using var connection = new SqlConnection(connectionString);
 
-            return await connection.QueryFirstOrDefaultAsync<Users>(@"SELECT Id, Email, StandarEmail, Password
+            return await connection.QueryFirstOrDefaultAsync<User>(@"SELECT Id, Email, StandarEmail, Password
                                                                 FROM Users
                                                                 WHERE Id = @Id",
                                                                 new { id });

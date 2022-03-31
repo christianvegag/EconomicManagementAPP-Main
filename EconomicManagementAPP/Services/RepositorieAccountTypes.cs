@@ -6,13 +6,13 @@ namespace EconomicManagementAPP.Services
 {
     public interface IRepositorieAccountTypes
     {
-        Task Create(AccountTypes accountTypes); // Se agrega task por el asincronismo
+        Task Create(AccountType accountTypes); // Se agrega task por el asincronismo
         Task<bool> Exist(string Name, int UserId);
-        Task<IEnumerable<AccountTypes>> getAccounts(int UserId);
-        Task Modify(AccountTypes accountTypes);
-        Task<AccountTypes> getAccountById(int id, int userId); // para el modify
+        Task<IEnumerable<AccountType>> getAccounts(int UserId);
+        Task Modify(AccountType accountTypes);
+        Task<AccountType> getAccountById(int id, int userId); // para el modify
         Task Delete(int id);
-        Task OrderAccount(IEnumerable<AccountTypes> accountTypesOrder);
+        Task OrderAccount(IEnumerable<AccountType> accountTypesOrder);
     }
     public class RepositorieAccountTypes : IRepositorieAccountTypes
     {
@@ -23,7 +23,7 @@ namespace EconomicManagementAPP.Services
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
         // El async va acompañado de Task
-        public async Task Create(AccountTypes accountTypes)
+        public async Task Create(AccountType accountTypes)
         {
             using var connection = new SqlConnection(connectionString);
             // Requiere el await - tambien requiere el Async al final de la query
@@ -54,16 +54,16 @@ namespace EconomicManagementAPP.Services
         }
 
         // Obtenemos las cuentas del usuario
-        public async Task<IEnumerable<AccountTypes>> getAccounts(int UserId)
+        public async Task<IEnumerable<AccountType>> getAccounts(int UserId)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<AccountTypes>(@"SELECT Id, Name, OrderAccount
+            return await connection.QueryAsync<AccountType>(@"SELECT Id, Name, OrderAccount
                                                             FROM AccountTypes
                                                             WHERE UserId = @UserId
                                                             ORDER BY OrderAccount", new { UserId });
         }
         // Actualizar
-        public async Task Modify(AccountTypes accountTypes)
+        public async Task Modify(AccountType accountTypes)
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"UPDATE AccountTypes
@@ -72,11 +72,11 @@ namespace EconomicManagementAPP.Services
         }
 
         //Para actualizar se necesita obtener el tipo de cuenta por el id
-        public async Task<AccountTypes> getAccountById(int id, int userId)
+        public async Task<AccountType> getAccountById(int id, int userId)
         {
             using var connection = new SqlConnection(connectionString);
 
-            return await connection.QueryFirstOrDefaultAsync<AccountTypes>(@"
+            return await connection.QueryFirstOrDefaultAsync<AccountType>(@"
                                                                 SELECT Id, Name, UserId, OrderAccount
                                                                 FROM AccountTypes
                                                                 WHERE Id = @Id AND UserID = @UserID",
@@ -91,7 +91,7 @@ namespace EconomicManagementAPP.Services
         }
 
         //Ordenar por tipo de cuentas
-        public async Task OrderAccount(IEnumerable<AccountTypes> accountTypesOrder)
+        public async Task OrderAccount(IEnumerable<AccountType> accountTypesOrder)
         {
             var query = "UPDATE accountTypes SET OrderAccount = @OrderAccount Where Id = @Id;";
             using var connection = new SqlConnection(connectionString);
