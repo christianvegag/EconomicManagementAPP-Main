@@ -51,7 +51,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<IActionResult> Create(AccountCreateViewModel account)
         {
             var userId = serviceUser.GetUserId();
-            var accountType = await repositorieAccountTypes.getAccountById(account.AccountTypeId, userId);
+            var accountType = await repositorieAccountTypes.getAccountTypesById(account.AccountTypeId, userId);
 
             if (accountType is null)
             {
@@ -95,7 +95,7 @@ namespace EconomicManagementAPP.Controllers
                 return RedirectToAction("NotFound", "Home");
             }
 
-            var accountType = await repositorieAccountTypes.getAccountById(accountModify.AccountTypeId, userId);
+            var accountType = await repositorieAccountTypes.getAccountTypesById(accountModify.AccountTypeId, userId);
 
             if (accountType is null)
             {
@@ -137,7 +137,7 @@ namespace EconomicManagementAPP.Controllers
 
         private async Task<IEnumerable<SelectListItem>> GetAccountTypes(int userId)
         {
-            var accountTypes = await repositorieAccountTypes.getAccounts(userId);
+            var accountTypes = await repositorieAccountTypes.getAccountTypes(userId);
             return accountTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
         }
 

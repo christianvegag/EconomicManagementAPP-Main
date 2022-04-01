@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/EconomicManagementAPP.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
 </head>
 <body>
     <header>
@@ -25,10 +26,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="AccountTypes" asp-action="Index">AccountTypes</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Index">Accounts</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AccountTypes" asp-action="Index">AccountTypes</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="OperationTypes" asp-action="Index">OperationTypes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
@@ -56,6 +60,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

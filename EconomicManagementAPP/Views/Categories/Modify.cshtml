@@ -23,8 +23,8 @@
 
     <div class="mb-3">
         <label asp-for="OperationTypeId" class="form-label"></label>
-        <select asp-for="OperationTypeId" asp-items="Html.GetEnumSelectList<OperationType>()"
-                class="form-select"></select>
+@*        <select asp-for="OperationTypeId" asp-items="Html.GetEnumSelectList<OperationType>()"
+*@                class="form-select"></select>
         <span asp-validation-for="OperationTypeId" class="text-danger"></span>
     </div>
 

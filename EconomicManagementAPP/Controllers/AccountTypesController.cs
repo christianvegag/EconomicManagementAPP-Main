@@ -1,9 +1,11 @@
-﻿using EconomicManagementAPP.Models;
+﻿using EconomicManagementAPP.Filters;
+using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EconomicManagementAPP.Controllers
-{
+{    
+    [TypeFilter(typeof(ExceptionManagerFilter))]
     public class AccountTypesController : Controller
     {
         private readonly IRepositorieAccountTypes repositorieAccountTypes;
@@ -20,7 +22,7 @@ namespace EconomicManagementAPP.Controllers
         {
             // Simula que estamos logeados en la app.
             var userId = serviceUser.GetUserId();
-            var accountTypes = await repositorieAccountTypes.getAccounts(userId);
+            var accountTypes = await repositorieAccountTypes.getAccountTypes(userId);
             return View(accountTypes);
         }
         public IActionResult Create()
@@ -51,8 +53,9 @@ namespace EconomicManagementAPP.Controllers
                 return View(accountType);
             }
             await repositorieAccountTypes.Create(accountType);
+            ViewBag.Message = "Registrado";
             // Redireccionamos a la lista
-            return RedirectToAction("Index");
+            return View();
         }
 
         // Hace que la validacion se active automaticamente desde el front
@@ -77,20 +80,19 @@ namespace EconomicManagementAPP.Controllers
         {
             var userId = serviceUser.GetUserId();
 
-            var accountType = await repositorieAccountTypes.getAccountById(id, userId);
+            var accountType = await repositorieAccountTypes.getAccountTypesById(id, userId);
 
             if (accountType is null)
             {
                 return RedirectToAction("NotFound", "Home");
             }
-
             return View(accountType);
         }
         [HttpPost]
         public async Task<ActionResult> Modify(AccountType accountType)
         {
             var userId = serviceUser.GetUserId();
-            var accountTypeExist = await repositorieAccountTypes.getAccountById(accountType.Id, userId);
+            var accountTypeExist = await repositorieAccountTypes.getAccountTypesById(accountType.Id, userId);
 
             if (accountTypeExist is null)
             {
@@ -105,7 +107,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var userId = serviceUser.GetUserId();
-            var account = await repositorieAccountTypes.getAccountById(id, userId);
+            var account = await repositorieAccountTypes.getAccountTypesById(id, userId);
 
             if (account is null)
             {
@@ -115,25 +117,27 @@ namespace EconomicManagementAPP.Controllers
             return View(account);
         }
         [HttpPost]
-        public async Task<IActionResult> DeleteAccount(int id)
+        public async Task<IActionResult> DeleteAccountTypes(int id)
         {
-            var userId = serviceUser.GetUserId();
-            var account = await repositorieAccountTypes.getAccountById(id, userId);
 
-            if (account is null)
-            {
-                return RedirectToAction("NotFound", "Home");
-            }
+                var userId = serviceUser.GetUserId();
+                var account = await repositorieAccountTypes.getAccountTypesById(id, userId);
 
-            await repositorieAccountTypes.Delete(id);
-            return RedirectToAction("Index");
+                if (account is null)
+                {
+                    return RedirectToAction("NotFound", "Home");
+                }
+
+                await repositorieAccountTypes.Delete(id);
+                return RedirectToAction("Index", new {message = "Hola"});
+            
         }
 
         [HttpPost]
-        public async Task<IActionResult> OrderAccount([FromBody] int[] ids)
+        public async Task<IActionResult> OrderAccountTypes([FromBody] int[] ids)
         {
             var userId = serviceUser.GetUserId();
-            var accountType = await repositorieAccountTypes.getAccounts(userId);
+            var accountType = await repositorieAccountTypes.getAccountTypes(userId);
             var idsAccountType = accountType.Select(x => x.Id);
 
             var idsTypeAccountNotUser = ids.Except(idsAccountType).ToList();

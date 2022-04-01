@@ -7,7 +7,7 @@ namespace EconomicManagementAPP.Services
     public interface IRepositorieUsers
     {
         Task Create(User user); // Se agrega task por el asincronismo
-        Task<bool> Exist(string Email, string StandarEmail);
+        Task<bool> Exist(string email, string standarEmail);
         Task<IEnumerable<User>> GetUsers();
         Task Modify(User user);
         Task<User> GetUserById(int id); // para el modify
@@ -30,14 +30,14 @@ namespace EconomicManagementAPP.Services
             user.Id = id;
         }
 
-        public async Task<bool> Exist(string Email, string StandarEmail)
+        public async Task<bool> Exist(string email, string standarEmail)
         {
             using var connection = new SqlConnection(connectionString);
             var exist = await connection.QueryFirstOrDefaultAsync<int>(
                                     @"SELECT 1
                                     FROM Users
                                     WHERE Email IN (@Email,@StandarEmail) OR StandarEmail IN (@Email,@StandarEmail);",
-                                    new { Email, StandarEmail });
+                                    new { email, standarEmail });
             return exist == 1;
         }
 
