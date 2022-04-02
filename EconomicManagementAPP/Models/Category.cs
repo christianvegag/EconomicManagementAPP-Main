@@ -1,4 +1,5 @@
 ﻿using EconomicManagementAPP.Validations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
 namespace EconomicManagementAPP.Models
@@ -14,9 +15,13 @@ namespace EconomicManagementAPP.Models
 
 
         [Display(Name = "OperationType")]
-        public OperationType OperationTypeId { get; set; }
-
+        public int OperationTypeId { get; set; }
+        public string OperationType { get; set; }
         public int UserId { get; set; }
+
+        public IEnumerable<SelectListItem> OperationTypes { get; set; }
+
+
 
     }
 }

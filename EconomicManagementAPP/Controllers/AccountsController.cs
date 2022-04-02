@@ -29,7 +29,7 @@ namespace EconomicManagementAPP.Controllers
 
             var model = accountTypeExist
                 .GroupBy(x => x.AccountType)
-                .Select(group => new IndexAccountViewModel
+                .Select(group => new AccountIndexViewModel
                 {
                     AccountTypes = group.Key,
                     Accounts = group.AsEnumerable()
@@ -51,7 +51,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<IActionResult> Create(AccountCreateViewModel account)
         {
             var userId = serviceUser.GetUserId();
-            var accountType = await repositorieAccountTypes.getAccountTypesById(account.AccountTypeId, userId);
+            var accountType = await repositorieAccountTypes.GetAccountTypesById(account.AccountTypeId, userId);
 
             if (accountType is null)
             {
@@ -95,7 +95,7 @@ namespace EconomicManagementAPP.Controllers
                 return RedirectToAction("NotFound", "Home");
             }
 
-            var accountType = await repositorieAccountTypes.getAccountTypesById(accountModify.AccountTypeId, userId);
+            var accountType = await repositorieAccountTypes.GetAccountTypesById(accountModify.AccountTypeId, userId);
 
             if (accountType is null)
             {
@@ -137,7 +137,7 @@ namespace EconomicManagementAPP.Controllers
 
         private async Task<IEnumerable<SelectListItem>> GetAccountTypes(int userId)
         {
-            var accountTypes = await repositorieAccountTypes.getAccountTypes(userId);
+            var accountTypes = await repositorieAccountTypes.GetAccountTypes(userId);
             return accountTypes.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
         }
 

@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<Category>
-
 @{
     ViewData["Title"] = "Categories";
 }
@@ -21,6 +20,7 @@
         {
             <tr>
                 <td>
+                    <input type="hidden" value="@category.Id" class="ids" />
                     <a class="btn btn-primary" asp-action="Modify" asp-route-id="@category.Id">Modify</a>
                     <a class="btn btn-danger" asp-action="Delete" asp-route-id="@category.Id">Delete</a>
                 </td>
@@ -28,7 +28,7 @@
                     @category.Name
                 </td>
                 <td>
-                    @category.OperationTypeId.ToString()
+                    @category.OperationType
                 </td>
             </tr>
         }

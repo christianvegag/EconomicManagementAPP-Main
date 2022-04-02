@@ -15,7 +15,6 @@ namespace EconomicManagementAPP.Models
         [Display(Name = "AccountType")]
         public int AccountTypeId { get; set; }
 
-        [DataType(DataType.Currency)]
         [Required(ErrorMessage = "Only numbers, for decimal write with ' . ' ")]
         public decimal Balance { get; set; }
 

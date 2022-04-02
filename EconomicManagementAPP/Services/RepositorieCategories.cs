@@ -37,8 +37,10 @@ namespace EconomicManagementAPP.Services
         public async Task<IEnumerable<Category>> GetCategories(int userId)
         {
             using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<Category>(
-                "SELECT * FROM Categories WHERE UserId = @UserId", new { userId });
+            return await connection.QueryAsync<Category>(@"
+                                       SELECT c.Id, c.Name, ot.Description AS OperationType, c.UserId FROM Categories AS c 
+                                       JOIN OperationTypes AS ot ON ot.Id = c.OperationTypeId
+                                       WHERE c.UserId = @UserId", new { userId });
         }
 
 

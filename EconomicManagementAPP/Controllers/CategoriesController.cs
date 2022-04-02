@@ -1,6 +1,7 @@
 ﻿using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EconomicManagementAPP.Controllers
 {
@@ -8,25 +9,30 @@ namespace EconomicManagementAPP.Controllers
     {
         private readonly IRepositorieCategories repositorieCategories;
         private readonly IServiceUser serviceUser;
+        private readonly IRepositorieOperationTypes repositorieOperationTypes;
 
         public CategoriesController(IRepositorieCategories repositorieCategories,
-            IServiceUser serviceUser)
+            IServiceUser serviceUser, IRepositorieOperationTypes repositorieOperationTypes)
         {
             this.repositorieCategories = repositorieCategories;
             this.serviceUser = serviceUser;
+            this.repositorieOperationTypes = repositorieOperationTypes;
         }
 
         public async Task<IActionResult> Index()
         {
             var userId = serviceUser.GetUserId();
             var categories = await repositorieCategories.GetCategories(userId);
+
             return View(categories);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var model = new Category();
+            model.OperationTypes = await GetOperationTypes();
+            return View(model);
         }
 
         [HttpPost]
@@ -103,6 +109,12 @@ namespace EconomicManagementAPP.Controllers
 
             await repositorieCategories.Delete(id);
             return RedirectToAction("Index");
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetOperationTypes()
+        {
+            var operationTypes = await repositorieOperationTypes.OperationTypesList();
+            return operationTypes.Select(x => new SelectListItem(x.Description, x.Id.ToString()));
         }
     }
 }

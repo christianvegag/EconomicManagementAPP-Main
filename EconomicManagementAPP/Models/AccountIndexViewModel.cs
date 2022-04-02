@@ -1,6 +1,6 @@
 ﻿namespace EconomicManagementAPP.Models
 {
-    public class IndexAccountViewModel
+    public class AccountIndexViewModel
     {
         public string AccountTypes { get; set; }
         public IEnumerable<Account> Accounts { get; set; }

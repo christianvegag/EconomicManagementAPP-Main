@@ -8,9 +8,9 @@ namespace EconomicManagementAPP.Services
     {
         Task Create(AccountType accountTypes); // Se agrega task por el asincronismo
         Task<bool> Exist(string name, int userId);
-        Task<IEnumerable<AccountType>> getAccountTypes(int userId);
+        Task<IEnumerable<AccountType>> GetAccountTypes(int userId);
         Task Modify(AccountType accountTypes);
-        Task<AccountType> getAccountTypesById(int id, int userId); // para el modify
+        Task<AccountType> GetAccountTypesById(int id, int userId); // para el modify
         Task Delete(int id);
         Task OrderAccount(IEnumerable<AccountType> accountTypesOrder); //para ordenar la lista de tipos de cuenta en el index
     }
@@ -54,7 +54,7 @@ namespace EconomicManagementAPP.Services
         }
 
         // Obtenemos las cuentas del usuario
-        public async Task<IEnumerable<AccountType>> getAccountTypes(int userId)
+        public async Task<IEnumerable<AccountType>> GetAccountTypes(int userId)
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryAsync<AccountType>(@"SELECT Id, Name, OrderAccount
@@ -72,7 +72,7 @@ namespace EconomicManagementAPP.Services
         }
 
         //Para actualizar se necesita obtener el tipo de cuenta por el id
-        public async Task<AccountType> getAccountTypesById(int id, int userId)
+        public async Task<AccountType> GetAccountTypesById(int id, int userId)
         {
             using var connection = new SqlConnection(connectionString);
 

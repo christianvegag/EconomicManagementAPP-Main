@@ -22,7 +22,7 @@ namespace EconomicManagementAPP.Controllers
         {
             // Simula que estamos logeados en la app.
             var userId = serviceUser.GetUserId();
-            var accountTypes = await repositorieAccountTypes.getAccountTypes(userId);
+            var accountTypes = await repositorieAccountTypes.GetAccountTypes(userId);
             return View(accountTypes);
         }
         public IActionResult Create()
@@ -80,7 +80,7 @@ namespace EconomicManagementAPP.Controllers
         {
             var userId = serviceUser.GetUserId();
 
-            var accountType = await repositorieAccountTypes.getAccountTypesById(id, userId);
+            var accountType = await repositorieAccountTypes.GetAccountTypesById(id, userId);
 
             if (accountType is null)
             {
@@ -92,7 +92,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<ActionResult> Modify(AccountType accountType)
         {
             var userId = serviceUser.GetUserId();
-            var accountTypeExist = await repositorieAccountTypes.getAccountTypesById(accountType.Id, userId);
+            var accountTypeExist = await repositorieAccountTypes.GetAccountTypesById(accountType.Id, userId);
 
             if (accountTypeExist is null)
             {
@@ -107,7 +107,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var userId = serviceUser.GetUserId();
-            var account = await repositorieAccountTypes.getAccountTypesById(id, userId);
+            var account = await repositorieAccountTypes.GetAccountTypesById(id, userId);
 
             if (account is null)
             {
@@ -121,7 +121,7 @@ namespace EconomicManagementAPP.Controllers
         {
 
                 var userId = serviceUser.GetUserId();
-                var account = await repositorieAccountTypes.getAccountTypesById(id, userId);
+                var account = await repositorieAccountTypes.GetAccountTypesById(id, userId);
 
                 if (account is null)
                 {
@@ -137,7 +137,7 @@ namespace EconomicManagementAPP.Controllers
         public async Task<IActionResult> OrderAccountTypes([FromBody] int[] ids)
         {
             var userId = serviceUser.GetUserId();
-            var accountType = await repositorieAccountTypes.getAccountTypes(userId);
+            var accountType = await repositorieAccountTypes.GetAccountTypes(userId);
             var idsAccountType = accountType.Select(x => x.Id);
 
             var idsTypeAccountNotUser = ids.Except(idsAccountType).ToList();

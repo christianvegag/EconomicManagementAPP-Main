@@ -4,7 +4,7 @@
     ViewData["Title"] = "Operation Types";
 }
 
-<h1>Account Types List</h1>
+<h1>Operation Types List</h1>
 
 <a asp-action="Create" class="btn btn-primary mb-3">Create</a>
 
@@ -15,7 +15,7 @@
             <th>Description</th>
         </tr>
     </thead>
-    <tbody id="reordenable">
+    <tbody>
         @foreach (var operationType in Model)
         {
             <tr>
