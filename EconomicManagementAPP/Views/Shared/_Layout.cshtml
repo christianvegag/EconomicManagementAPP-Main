@@ -19,19 +19,19 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark"  asp-controller="Transactions" asp-action="Index">Transactions</a>
-                        </li>
+                            <a class="btn btn-outline-success my-2 my-sm-0"  asp-controller="Transactions" asp-action="Index">Transactions</a>
+                        </li>&nbsp;
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AccountTypes" asp-action="Index">AccountTypes</a>
-                        </li>
+                            <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="AccountTypes" asp-action="Index">AccountTypes</a>
+                        </li>&nbsp;
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Accounts" asp-action="Index">Accounts</a>
-                        </li>
+                            <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="Accounts" asp-action="Index">Accounts</a>
+                        </li>&nbsp;
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                            <a class="btn btn-outline-success my-2 my-sm-0" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
                         </li>
                     </ul>
                     <partial name="_LinksLogin" />
