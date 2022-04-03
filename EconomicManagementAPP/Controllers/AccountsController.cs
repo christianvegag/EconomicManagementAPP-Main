@@ -15,15 +15,20 @@ namespace EconomicManagementAPP.Controllers
         private readonly IRepositorieAccounts repositorieAccounts;
         private readonly IMapper mapper;
         private readonly IRepositorieTransactions repositorieTransactions;
+        private readonly IReportServices reportServices;
 
-        public AccountsController(IRepositorieAccountTypes repositorieAccountTypes, IUserServices serviceUser,
-            IRepositorieAccounts repositorieAccounts, IMapper mapper, IRepositorieTransactions repositorieTransactions)
+        public AccountsController(IRepositorieAccountTypes repositorieAccountTypes, 
+                                IUserServices serviceUser,
+                                IRepositorieAccounts repositorieAccounts, 
+                                IMapper mapper, IRepositorieTransactions repositorieTransactions,
+                                IReportServices reportServices)
         {
             this.repositorieAccountTypes = repositorieAccountTypes;
             this.serviceUser = serviceUser;
             this.repositorieAccounts = repositorieAccounts;
             this.mapper = mapper;
             this.repositorieTransactions = repositorieTransactions;
+            this.reportServices = reportServices;
         }
 
         public async Task<IActionResult> Index()
@@ -42,60 +47,19 @@ namespace EconomicManagementAPP.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Detail (int id, int month, int year)
+        public async Task<IActionResult> Detail(int id, int month, int year)
         {
             var userId = serviceUser.GetUserId();
             var account = await repositorieAccounts.GetAccountById(id, userId);
 
-            if(account is null)
+            if (account is null)
             {
                 return RedirectToAction("NotFound", "Home");
             }
 
-            DateTime startDate;
-            DateTime endDate;
-
-            if (month <= 0 || month > 12 || year <= 1900)
-            {
-                var today = DateTime.Today;
-                startDate = new DateTime(today.Year, today.Month, 1);
-            }
-            else
-            {
-                startDate = new DateTime(year, month, 1);
-            }
-
-            endDate = startDate.AddMonths(1).AddDays(-1);
-
-            var getTransactionsByAccount = new ParamGetTransactionsByAccount()
-            {
-                AccountId = id,
-                UserId = userId,
-                StartDate = startDate,
-                EndDate = endDate,
-            };
-
-            var transactions = await repositorieTransactions.GetByAccountId(getTransactionsByAccount);
-            var model = new ReportTransactionsDetails();
             ViewBag.Account = account.Name;
 
-            var transactionsByDate = transactions.OrderByDescending(x => x.TransactionDate)
-                .GroupBy(x => x.TransactionDate)
-                .Select(group => new ReportTransactionsDetails.TransactionsByDate()
-                {
-                    TransactionDate = group.Key,
-                    Transactions = group.AsEnumerable()
-                });
-
-            model.TransactionsGrouped = transactionsByDate;
-            model.StartDate = startDate;
-            model.EndDate = endDate;
-
-            ViewBag.previousMonth = startDate.AddMonths(-1).Month;
-            ViewBag.previousYear = startDate.AddMonths(-1).Year;
-            ViewBag.laterMonth = startDate.AddMonths(1).Month;
-            ViewBag.laterYear = startDate.AddMonths(1).Year;
-            ViewBag.urlReturn = HttpContext.Request.Path + HttpContext.Request.QueryString;
+            var model = await reportServices.GetReportTransactionsDetailedByAccount(userId, id, month, year, ViewBag);
 
             return View(model);
         }

@@ -10,7 +10,8 @@ namespace EconomicManagementAPP.Controllers
     {
         private readonly IRepositorieAccountTypes repositorieAccountTypes;
         private readonly IUserServices serviceUser;
-        public AccountTypesController(IRepositorieAccountTypes repositorieAccountTypes, IUserServices serviceUser)
+        public AccountTypesController(IRepositorieAccountTypes repositorieAccountTypes, 
+                                        IUserServices serviceUser)
         {
             this.repositorieAccountTypes = repositorieAccountTypes;
             this.serviceUser = serviceUser;

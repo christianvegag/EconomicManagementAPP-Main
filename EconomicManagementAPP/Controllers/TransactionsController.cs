@@ -17,13 +17,15 @@ namespace EconomicManagementAPP.Controllers
         private readonly IRepositorieOperationTypes repositorieOperationTypes;
         private readonly IUserServices userServices;
         private readonly IMapper mapper;
+        private readonly IReportServices reportServices;
 
         public TransactionsController(IRepositorieTransactions repositorieTransactions,
                                       IRepositorieAccounts repositorieAccounts,
                                       IRepositorieCategories repositorieCategories,
                                       IRepositorieOperationTypes repositorieOperationTypes,
                                       IUserServices userServices,
-                                      IMapper mapper)
+                                      IMapper mapper,
+                                      IReportServices reportServices)
         {
             this.repositorieTransactions = repositorieTransactions;
             this.repositorieAccounts = repositorieAccounts;
@@ -31,22 +33,24 @@ namespace EconomicManagementAPP.Controllers
             this.repositorieOperationTypes = repositorieOperationTypes;
             this.userServices = userServices;
             this.mapper = mapper;
+            this.reportServices = reportServices;
         }
 
-        public  IActionResult Index()
+        public async Task<IActionResult> Index(int month, int year)
         {
-            return View();
+            var userId = userServices.GetUserId();
+            var model = await reportServices.GetReportTransactionsDetailed(userId, month, year, ViewBag);
+            return View(model);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create(int id)
+        public async Task<IActionResult> Create()
         {
             var userId = userServices.GetUserId();
             var model = new TransactionViewModel();
             model.Accounts = await GetAccounts(userId);
             model.OperationTypes = await GetOperationTypes();
             model.Categories = await GetCategories(userId, model.OperationTypeId);
-            model.AccountId = id;
             return View(model);
         }
 
@@ -66,22 +70,22 @@ namespace EconomicManagementAPP.Controllers
             var account = await repositorieAccounts.GetAccountById(model.AccountId, userId);
             var category = await repositorieCategories.GetById(model.CategoryId, userId);
 
-            if(account is null || category is null)
+            if (account is null || category is null)
             {
                 return RedirectToAction("NotFound", "Home");
             }
 
             model.UserId = userId;
-            
+
             var operationType = await repositorieOperationTypes.GetOperationTypesById(model.OperationTypeId);
 
-            if (operationType.Description == "Expense" )
+            if (operationType.Description == "Expense")
             {
                 model.Total *= -1;
             }
 
             await repositorieTransactions.Create(model);
-            return RedirectToAction("Index", "Accounts");
+            return RedirectToAction("Index", "Account");
         }
 
         [HttpGet]
@@ -209,7 +213,7 @@ namespace EconomicManagementAPP.Controllers
             return Ok(categories);
         }
 
-        
+
 
 
     }

@@ -11,6 +11,8 @@ builder.Services.AddTransient<IRepositorieAccounts, RepositorieAccounts>();
 builder.Services.AddTransient<IRepositorieCategories, RepositorieCategories>();
 builder.Services.AddTransient<IRepositorieOperationTypes, RepositorieOperationTypes>();
 builder.Services.AddTransient<IRepositorieTransactions, RepositorieTransactions>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<IReportServices, ReportServices>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 
@@ -34,6 +36,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Transactions}/{action=Index}/{id?}");
 
 app.Run();

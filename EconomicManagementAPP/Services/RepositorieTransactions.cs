@@ -53,17 +53,21 @@ namespace EconomicManagementAPP.Services
                                 AND TransactionDate BETWEEN @StartDate AND @EndDate", model);
         }
 
-
-        //// Obtener Transacciones de una cuenta
-        //public async Task<IEnumerable<Transaction>> GetTransactions(int accountId, int userId)
-        //{
-        //    using var connection = new SqlConnection(connectionString);
-        //    return await connection.QueryAsync<Transaction>(@"SELECT t.Id, t.UserId, t.TransactionDate, t.Total, t.OperationTypeId, t.Description, t.AccountId, t.CategoryId, c.Name AS Category
-        //                                                     FROM Transactions t
-        //                                                     JOIN Categories c ON c.Id = t.CategoryId
-        //                                                     WHERE t.AccountId = @accountId AND t.UserId = @userId
-        //                                                     ORDER BY t.Id DESC;", new { accountId, userId });
-        //}
+        //Obtener cuenta por Usuario
+        public async Task<IEnumerable<Transaction>> GetByUserId(ParamGetTransactionsByUser model)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<Transaction>(@"
+                                SELECT t.Id, t.Total, t.TransactionDate, c.Name AS Category,
+                                a.Name AS Account, c.OperationTypeId, ot.Description AS OperationType
+                                FROM Transactions AS t
+                                JOIN Categories AS c ON c.Id = t.CategoryId
+                                JOIN Accounts AS a ON a.Id = t.AccountId
+                                JOIN OperationTypes AS ot ON ot.Id = c.OperationTypeId
+                                WHERE t.UserId = @UserId
+                                AND TransactionDate BETWEEN @StartDate AND @EndDate
+                                ORDER BY t.TransactionDate DESC", model);
+        }
 
         public async Task Modify(Transaction transaction, decimal previusTotal, int previusAccountId)
         {

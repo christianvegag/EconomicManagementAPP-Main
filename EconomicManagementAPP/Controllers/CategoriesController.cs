@@ -15,7 +15,8 @@ namespace EconomicManagementAPP.Controllers
         private readonly IRepositorieOperationTypes repositorieOperationTypes;
 
         public CategoriesController(IRepositorieCategories repositorieCategories,
-            IUserServices serviceUser, IRepositorieOperationTypes repositorieOperationTypes)
+                                    IUserServices serviceUser, 
+                                    IRepositorieOperationTypes repositorieOperationTypes)
         {
             this.repositorieCategories = repositorieCategories;
             this.serviceUser = serviceUser;
