@@ -6,7 +6,9 @@
 
 <h1>Sign-Up</h1>
 
-<form asp-action="Register">
+<div class="card"> 
+    <div class="card-body">
+        <form asp-action="Register">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
     <div class="mb-3">
@@ -20,8 +22,16 @@
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
-    <button class="btn-primary btn">Register</button>
+    <div class="d-flex justify-content-center">
+                  <button class="btn-success btn">SignUp</button> &nbsp;
+                  <a class="btn btn-danger" asp-action="login">Cancel</a>
+     </div>
+
 </form>
+    </div>
+</div>
+
+
 
 @section Scripts{
     <partil name="_ValidationsScriptsPartil" />
