@@ -1,9 +1,12 @@
-﻿using EconomicManagementAPP.Models;
+﻿using EconomicManagementAPP.Filters;
+using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EconomicManagementAPP.Controllers
 {
+    [TypeFilter(typeof(ExceptionManagerFilter))]
+
     public class OperationTypesController : Controller
     {
         private readonly IRepositorieOperationTypes repositorieOperationTypes;
@@ -66,7 +69,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpGet]
         public async Task<ActionResult> Modify(int id)
         {
-            var operationType = await repositorieOperationTypes.getOperationTypesById(id);
+            var operationType = await repositorieOperationTypes.GetOperationTypesById(id);
 
             if (operationType is null)
             {
@@ -78,7 +81,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpPost]
         public async Task<ActionResult> Modify(OperationType operationType)
         {
-            var accountTypeExist = await repositorieOperationTypes.getOperationTypesById(operationType.Id);
+            var accountTypeExist = await repositorieOperationTypes.GetOperationTypesById(operationType.Id);
 
             if (accountTypeExist is null)
             {
@@ -92,7 +95,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var account = await repositorieOperationTypes.getOperationTypesById(id);
+            var account = await repositorieOperationTypes.GetOperationTypesById(id);
 
             if (account is null)
             {
@@ -104,7 +107,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteOperationTypes(int id)
         {
-            var account = await repositorieOperationTypes.getOperationTypesById(id);
+            var account = await repositorieOperationTypes.GetOperationTypesById(id);
 
             if (account is null)
             {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EconomicManagementAPP.Filters;
 using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -6,20 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EconomicManagementAPP.Controllers
 {
+    [TypeFilter(typeof(ExceptionManagerFilter))]
     public class AccountsController : Controller
     {
         private readonly IRepositorieAccountTypes repositorieAccountTypes;
-        private readonly IServiceUser serviceUser;
+        private readonly IUserServices serviceUser;
         private readonly IRepositorieAccounts repositorieAccounts;
         private readonly IMapper mapper;
+        private readonly IRepositorieTransactions repositorieTransactions;
 
-        public AccountsController(IRepositorieAccountTypes repositorieAccountTypes, IServiceUser serviceUser,
-            IRepositorieAccounts repositorieAccounts, IMapper mapper)
+        public AccountsController(IRepositorieAccountTypes repositorieAccountTypes, IUserServices serviceUser,
+            IRepositorieAccounts repositorieAccounts, IMapper mapper, IRepositorieTransactions repositorieTransactions)
         {
             this.repositorieAccountTypes = repositorieAccountTypes;
             this.serviceUser = serviceUser;
             this.repositorieAccounts = repositorieAccounts;
             this.mapper = mapper;
+            this.repositorieTransactions = repositorieTransactions;
         }
 
         public async Task<IActionResult> Index()
@@ -38,17 +42,76 @@ namespace EconomicManagementAPP.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Detail (int id, int month, int year)
+        {
+            var userId = serviceUser.GetUserId();
+            var account = await repositorieAccounts.GetAccountById(id, userId);
+
+            if(account is null)
+            {
+                return RedirectToAction("NotFound", "Home");
+            }
+
+            DateTime startDate;
+            DateTime endDate;
+
+            if (month <= 0 || month > 12 || year <= 1900)
+            {
+                var today = DateTime.Today;
+                startDate = new DateTime(today.Year, today.Month, 1);
+            }
+            else
+            {
+                startDate = new DateTime(year, month, 1);
+            }
+
+            endDate = startDate.AddMonths(1).AddDays(-1);
+
+            var getTransactionsByAccount = new ParamGetTransactionsByAccount()
+            {
+                AccountId = id,
+                UserId = userId,
+                StartDate = startDate,
+                EndDate = endDate,
+            };
+
+            var transactions = await repositorieTransactions.GetByAccountId(getTransactionsByAccount);
+            var model = new ReportTransactionsDetails();
+            ViewBag.Account = account.Name;
+
+            var transactionsByDate = transactions.OrderByDescending(x => x.TransactionDate)
+                .GroupBy(x => x.TransactionDate)
+                .Select(group => new ReportTransactionsDetails.TransactionsByDate()
+                {
+                    TransactionDate = group.Key,
+                    Transactions = group.AsEnumerable()
+                });
+
+            model.TransactionsGrouped = transactionsByDate;
+            model.StartDate = startDate;
+            model.EndDate = endDate;
+
+            ViewBag.previousMonth = startDate.AddMonths(-1).Month;
+            ViewBag.previousYear = startDate.AddMonths(-1).Year;
+            ViewBag.laterMonth = startDate.AddMonths(1).Month;
+            ViewBag.laterYear = startDate.AddMonths(1).Year;
+            ViewBag.urlReturn = HttpContext.Request.Path + HttpContext.Request.QueryString;
+
+            return View(model);
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             var userId = serviceUser.GetUserId();
-            var model = new AccountCreateViewModel();
+            var model = new AccountViewModel();
             model.AccountTypes = await GetAccountTypes(userId);
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(AccountCreateViewModel account)
+        public async Task<IActionResult> Create(AccountViewModel account)
         {
             var userId = serviceUser.GetUserId();
             var accountType = await repositorieAccountTypes.GetAccountTypesById(account.AccountTypeId, userId);
@@ -78,14 +141,14 @@ namespace EconomicManagementAPP.Controllers
                 return RedirectToAction("NotFound", "Home");
             }
 
-            var model = mapper.Map<AccountCreateViewModel>(account); //Mapeo de manera automatica con todo el modelo sin ingresar manualmente los datos
+            var model = mapper.Map<AccountViewModel>(account); //Mapeo de manera automatica con todo el modelo sin ingresar manualmente los datos
 
             model.AccountTypes = await GetAccountTypes(userId);
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Modify(AccountCreateViewModel accountModify)
+        public async Task<IActionResult> Modify(AccountViewModel accountModify)
         {
             var userId = serviceUser.GetUserId();
             var account = await repositorieAccounts.GetAccountById(accountModify.Id, userId);

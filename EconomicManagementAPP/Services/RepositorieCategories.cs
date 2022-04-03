@@ -4,14 +4,6 @@ using Microsoft.Data.SqlClient;
 
 namespace EconomicManagementAPP.Services
 {
-    public interface IRepositorieCategories
-    {
-        Task Modify(Category category);
-        Task Delete(int id);
-        Task Create(Category category);
-        Task<IEnumerable<Category>> GetCategories(int userId);
-        Task<Category> GetById(int id, int userId);
-    }
 
     public class RepositorieCategories : IRepositorieCategories
     {
@@ -41,6 +33,15 @@ namespace EconomicManagementAPP.Services
                                        SELECT c.Id, c.Name, ot.Description AS OperationType, c.UserId FROM Categories AS c 
                                        JOIN OperationTypes AS ot ON ot.Id = c.OperationTypeId
                                        WHERE c.UserId = @UserId", new { userId });
+        }
+
+        public async Task<IEnumerable<Category>> GetCategoriesByOpType(int userId, int operationTypeId)
+        {
+            using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<Category>(@"
+                                       SELECT c.Id, c.Name, ot.Description AS OperationType, c.UserId FROM Categories AS c 
+                                       JOIN OperationTypes AS ot ON ot.Id = c.OperationTypeId
+                                       WHERE c.UserId = @UserId AND c.OperationTypeId = @OperationTypeId", new { userId, operationTypeId });
         }
 
 

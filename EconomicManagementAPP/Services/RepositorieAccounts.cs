@@ -4,14 +4,6 @@ using Microsoft.Data.SqlClient;
 
 namespace EconomicManagementAPP.Services
 {
-    public interface IRepositorieAccounts
-    {
-        Task Modify(AccountCreateViewModel account);
-        Task Delete(int id);
-        Task<IEnumerable<Account>> AccountList(int userId);
-        Task Create(Account account);
-        Task<Account> GetAccountById(int id, int userId);
-    }
 
     public class RepositorieAccounts : IRepositorieAccounts
     {
@@ -49,14 +41,14 @@ namespace EconomicManagementAPP.Services
         {
             using var connection = new SqlConnection(connectionString);
             return await connection.QueryFirstOrDefaultAsync<Account>(
-                @"SELECT a.Id, a.Name, a.Balance, a.Description, at.Id
+                @"SELECT a.Id, a.Name, a.Balance, a.Description, AccountTypeId
                 FROM Accounts AS a
                 INNER JOIN AccountTypes AS at
                 ON at.Id = a.AccountTypeId
                 WHERE at.UserId = @UserId AND a.Id = @Id", new { id, userId });
         }
 
-        public async Task Modify(AccountCreateViewModel account)
+        public async Task Modify(AccountViewModel account)
         {
             using var connection = new SqlConnection(connectionString);
             await connection.ExecuteAsync(@"UPDATE Accounts

@@ -1,10 +1,6 @@
 ﻿namespace EconomicManagementAPP.Services
 {
-    public interface IServiceUser
-    {
-        int GetUserId();
-    }
-    public class ServiceUser : IServiceUser
+    public class UserServices : IUserServices
     {
         public int GetUserId()
         {

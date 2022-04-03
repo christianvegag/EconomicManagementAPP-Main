@@ -1,9 +1,12 @@
-﻿using EconomicManagementAPP.Models;
+﻿using EconomicManagementAPP.Filters;
+using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EconomicManagementAPP.Controllers
 {
+    [TypeFilter(typeof(ExceptionManagerFilter))]
+
     public class UsersController : Controller
     {
         private readonly IRepositorieUsers repositorieUsers;

@@ -44,12 +44,12 @@ CREATE TABLE [Transactions](
 	[UserId] [int] NOT NULL,
 	[TransactionDate] [datetime] NOT NULL,
 	[Total] [decimal](18, 2) NOT NULL,
-	--[OperationTypeId] [int] NOT NULL, se elimina porque se repite, ya que la categoria lleva el tipo de operacion a necesitar
+	[OperationTypeId] [int] NOT NULL,
 	[Description] [nvarchar](1000) NULL,
 	[AccountId] [int] NOT NULL,
 	[CategoryId] [int] NOT NULL,
     CONSTRAINT [FK_TransactionsUsers] FOREIGN KEY (UserId) REFERENCES Users(Id),
-	--CONSTRAINT [FK_TransactiosOperationType] FOREIGN KEY (OperationTypeId) REFERENCES OperationTypes(Id),
+	CONSTRAINT [FK_TransactiosOperationType] FOREIGN KEY (OperationTypeId) REFERENCES OperationTypes(Id),
 	CONSTRAINT [FK_TransactionsAccount] FOREIGN KEY (AccountId) REFERENCES Accounts(Id),
 	CONSTRAINT [FK_TransactionsCategories] FOREIGN KEY (CategoryId) REFERENCES Categories(Id)
 )

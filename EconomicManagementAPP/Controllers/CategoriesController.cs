@@ -1,18 +1,21 @@
-﻿using EconomicManagementAPP.Models;
+﻿using EconomicManagementAPP.Filters;
+using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EconomicManagementAPP.Controllers
 {
+    [TypeFilter(typeof(ExceptionManagerFilter))]
+
     public class CategoriesController : Controller
     {
         private readonly IRepositorieCategories repositorieCategories;
-        private readonly IServiceUser serviceUser;
+        private readonly IUserServices serviceUser;
         private readonly IRepositorieOperationTypes repositorieOperationTypes;
 
         public CategoriesController(IRepositorieCategories repositorieCategories,
-            IServiceUser serviceUser, IRepositorieOperationTypes repositorieOperationTypes)
+            IUserServices serviceUser, IRepositorieOperationTypes repositorieOperationTypes)
         {
             this.repositorieCategories = repositorieCategories;
             this.serviceUser = serviceUser;
@@ -30,7 +33,7 @@ namespace EconomicManagementAPP.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var model = new Category();
+            var model = new CategoriesViewModel();
             model.OperationTypes = await GetOperationTypes();
             return View(model);
         }

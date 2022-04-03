@@ -18,7 +18,7 @@ namespace EconomicManagementAPP.Models
         [Required(ErrorMessage = "Only numbers, for decimal write with ' . ' ")]
         public decimal Balance { get; set; }
 
-        [StringLength(maximumLength: 1000)]
+        [StringLength(maximumLength: 1000, ErrorMessage = "The description cannot exceed {1} characters")]
         public string Description { get; set; }
 
         public string AccountType { get; set; }

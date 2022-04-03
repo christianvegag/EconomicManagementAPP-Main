@@ -2,7 +2,7 @@
 
 namespace EconomicManagementAPP.Models
 {
-    public class AccountCreateViewModel : Account
+    public class AccountViewModel : Account
     {
         public IEnumerable<SelectListItem> AccountTypes { get; set; }
     }

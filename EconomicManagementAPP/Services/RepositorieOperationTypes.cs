@@ -4,15 +4,6 @@ using Microsoft.Data.SqlClient;
 
 namespace EconomicManagementAPP.Services
 {
-    public interface IRepositorieOperationTypes
-    {
-        Task Create(OperationType operationType);
-        Task Delete(int id);
-        Task<bool> Exist(string description);
-        Task<OperationType> getOperationTypesById(int id);
-        Task Modify(OperationType operationType);
-        Task<IEnumerable<OperationType>> OperationTypesList();
-    }
     public class RepositorieOperationTypes : IRepositorieOperationTypes
     {
         private readonly string connectionString;
@@ -51,6 +42,8 @@ namespace EconomicManagementAPP.Services
                                                             FROM OperationTypes
                                                             ORDER BY Id");
         }
+
+
         // Actualizar
         public async Task Modify(OperationType operationType)
         {
@@ -60,7 +53,7 @@ namespace EconomicManagementAPP.Services
                                             WHERE Id = @Id", operationType);
         }
 
-        public async Task<OperationType> getOperationTypesById(int id)
+        public async Task<OperationType> GetOperationTypesById(int id)
         {
             using var connection = new SqlConnection(connectionString);
 
@@ -70,6 +63,7 @@ namespace EconomicManagementAPP.Services
                                                                 WHERE Id = @Id",
                                                                 new { id });
         }
+
 
         //Eliminar
         public async Task Delete(int id)

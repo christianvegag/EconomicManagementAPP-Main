@@ -4,16 +4,6 @@ using Microsoft.Data.SqlClient;
 
 namespace EconomicManagementAPP.Services
 {
-    public interface IRepositorieAccountTypes
-    {
-        Task Create(AccountType accountTypes); // Se agrega task por el asincronismo
-        Task<bool> Exist(string name, int userId);
-        Task<IEnumerable<AccountType>> GetAccountTypes(int userId);
-        Task Modify(AccountType accountTypes);
-        Task<AccountType> GetAccountTypesById(int id, int userId); // para el modify
-        Task Delete(int id);
-        Task OrderAccount(IEnumerable<AccountType> accountTypesOrder); //para ordenar la lista de tipos de cuenta en el index
-    }
     public class RepositorieAccountTypes : IRepositorieAccountTypes
     {
         private readonly string connectionString;
@@ -28,7 +18,7 @@ namespace EconomicManagementAPP.Services
             using var connection = new SqlConnection(connectionString);
             // Requiere el await - tambien requiere el Async al final de la query
             var id = await connection.QuerySingleAsync<int>
-                                                            ("AccountType_Insert",
+                                                            ("SP_AccountType_Insert",
                                                             new
                                                             {
                                                                 Name = accountTypes.Name,
