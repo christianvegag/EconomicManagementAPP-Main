@@ -85,7 +85,7 @@ namespace EconomicManagementAPP.Controllers
             }
 
             await repositorieTransactions.Create(model);
-            return RedirectToAction("Index", "Account");
+            return RedirectToAction("Index", "Transactions");
         }
 
         [HttpGet]
