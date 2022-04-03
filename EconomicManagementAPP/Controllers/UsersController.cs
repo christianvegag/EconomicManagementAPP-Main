@@ -1,6 +1,8 @@
 ﻿using EconomicManagementAPP.Filters;
 using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EconomicManagementAPP.Controllers
@@ -9,115 +11,171 @@ namespace EconomicManagementAPP.Controllers
 
     public class UsersController : Controller
     {
-        private readonly IRepositorieUsers repositorieUsers;
+        private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
 
-        public UsersController(IRepositorieUsers repositorieUsers)
+        public UsersController(UserManager<User> userManager,
+                                SignInManager<User> signInManager)
         {
-            this.repositorieUsers = repositorieUsers;
-        }   
-
-        public async Task<IActionResult> Index()
-        {
-            var users = await repositorieUsers.GetUsers();
-            return View(users);
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
-        public IActionResult Create()
+
+
+        public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
-                return View(user);
+                return View(model);
             }
 
-            if(user.Email == user.StandarEmail) {
-                ModelState.AddModelError(nameof(user.StandarEmail),
-                    $"Email cannot be repeated ");
-                return View(user);
-            }
+            var user = new User() { Email = model.Email };
+            var result = await userManager.CreateAsync(user, password: model.Password);
 
-            var userExist =
-               await repositorieUsers.Exist(user.Email, user.StandarEmail);
-
-            if (userExist)
+            if (result.Succeeded)
             {
-                ModelState.AddModelError(nameof(user.Email),
-                    $"Any Email already use.");
-
-                return View(user);
+                await signInManager.SignInAsync(user, isPersistent: true);
+                return RedirectToAction("Index", "Transactions");
             }
-            await repositorieUsers.Create(user);
-            return RedirectToAction("Index");
+            else
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                return View(model);
+            }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> VerificaryUser(string Email, string StandarEmail)
-        {
-            var userExist = await repositorieUsers.Exist(Email, StandarEmail);
-
-            if (userExist)
-            {
-                return Json($"The account {Email}{StandarEmail} already exist");
-            }
-
-            return Json(true);
-        }
-
-        //Actualizar
-        [HttpGet]
-        public async Task<ActionResult> Modify(int id)
-        {
-            var user = await repositorieUsers.GetUserById(id);
-
-            if (user is null)
-            {
-                return RedirectToAction("NotFound", "Home");
-            }
-
-            return View(user);
-        }
         [HttpPost]
-        public async Task<ActionResult> Modify(User user)
+        public async Task<IActionResult> Logout()
         {
-            var userExists = await repositorieUsers.GetUserById(user.Id);
-
-            if (userExists is null)
-            {
-                return RedirectToAction("NotFound", "Home");
-            }
-
-            await repositorieUsers.Modify(user);
-            return RedirectToAction("Index");
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            return RedirectToAction("Index", "Transactions");
         }
-        // Eliminar
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var user = await repositorieUsers.GetUserById(id);
 
-            if (user is null)
-            {
-                return RedirectToAction("NotFount", "Home");
-            }
 
-            return View(user);
-        }
-        [HttpPost]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await repositorieUsers.GetUserById(id);
 
-            if (user is null)
-            {
-                return RedirectToAction("NotFound", "Home");
-            }
 
-            await repositorieUsers.Delete(id);
-            return RedirectToAction("Index");
-        }
+
+
+
+
+
+        //    public UsersController(IRepositorieUsers repositorieUsers)
+        //    {
+        //        this.repositorieUsers = repositorieUsers;
+        //    }   
+
+        //    public async Task<IActionResult> Index()
+        //    {
+        //        var users = await repositorieUsers.GetUsers();
+        //        return View(users);
+        //    }
+        //    public IActionResult Create()
+        //    {
+        //        return View();
+        //    }
+
+        //    [HttpPost]
+        //    public async Task<IActionResult> Create(User user)
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+        //            return View(user);
+        //        }
+
+        //        if(user.Email == user.StandarEmail) {
+        //            ModelState.AddModelError(nameof(user.StandarEmail),
+        //                $"Email cannot be repeated ");
+        //            return View(user);
+        //        }
+
+        //        var userExist =
+        //           await repositorieUsers.Exist(user.Email, user.StandarEmail);
+
+        //        if (userExist)
+        //        {
+        //            ModelState.AddModelError(nameof(user.Email),
+        //                $"Any Email already use.");
+
+        //            return View(user);
+        //        }
+        //        await repositorieUsers.Create(user);
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    [HttpGet]
+        //    public async Task<IActionResult> VerificaryUser(string Email, string StandarEmail)
+        //    {
+        //        var userExist = await repositorieUsers.Exist(Email, StandarEmail);
+
+        //        if (userExist)
+        //        {
+        //            return Json($"The account {Email}{StandarEmail} already exist");
+        //        }
+
+        //        return Json(true);
+        //    }
+
+        //    //Actualizar
+        //    [HttpGet]
+        //    public async Task<ActionResult> Modify(int id)
+        //    {
+        //        var user = await repositorieUsers.GetUserById(id);
+
+        //        if (user is null)
+        //        {
+        //            return RedirectToAction("NotFound", "Home");
+        //        }
+
+        //        return View(user);
+        //    }
+        //    [HttpPost]
+        //    public async Task<ActionResult> Modify(User user)
+        //    {
+        //        var userExists = await repositorieUsers.GetUserById(user.Id);
+
+        //        if (userExists is null)
+        //        {
+        //            return RedirectToAction("NotFound", "Home");
+        //        }
+
+        //        await repositorieUsers.Modify(user);
+        //        return RedirectToAction("Index");
+        //    }
+        //    // Eliminar
+        //    [HttpGet]
+        //    public async Task<IActionResult> Delete(int id)
+        //    {
+        //        var user = await repositorieUsers.GetUserById(id);
+
+        //        if (user is null)
+        //        {
+        //            return RedirectToAction("NotFount", "Home");
+        //        }
+
+        //        return View(user);
+        //    }
+        //    [HttpPost]
+        //    public async Task<IActionResult> DeleteUser(int id)
+        //    {
+        //        var user = await repositorieUsers.GetUserById(id);
+
+        //        if (user is null)
+        //        {
+        //            return RedirectToAction("NotFound", "Home");
+        //        }
+
+        //        await repositorieUsers.Delete(id);
+        //        return RedirectToAction("Index");
+        //    }
+        //}
     }
 }

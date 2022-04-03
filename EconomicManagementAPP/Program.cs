@@ -1,12 +1,12 @@
+using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRepositorieAccountTypes, RepositorieAccountTypes>();
-builder.Services.AddTransient<IRepositorieUsers, RepositorieUsers>();
-builder.Services.AddTransient<IUserServices, UserServices>();
 builder.Services.AddTransient<IRepositorieAccounts, RepositorieAccounts>();
 builder.Services.AddTransient<IRepositorieCategories, RepositorieCategories>();
 builder.Services.AddTransient<IRepositorieOperationTypes, RepositorieOperationTypes>();
@@ -14,6 +14,25 @@ builder.Services.AddTransient<IRepositorieTransactions, RepositorieTransactions>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IReportServices, ReportServices>();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddTransient<IRepositorieUsers, RepositorieUsers>();
+builder.Services.AddTransient<IUserStore<User>, UserStore>();
+builder.Services.AddTransient<SignInManager<User>>();
+builder.Services.AddIdentityCore<User>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+});
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
+}).AddCookie(IdentityConstants.ApplicationScheme);
+
+builder.Services.AddTransient<IUserServices, UserServices>();
 
 
 
@@ -31,6 +50,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
