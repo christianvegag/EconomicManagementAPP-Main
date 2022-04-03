@@ -130,7 +130,7 @@ namespace EconomicManagementAPP.Controllers
                 }
 
                 await repositorieAccountTypes.Delete(id);
-                return RedirectToAction("Index", new {message = "Hola"});
+                return RedirectToAction("Index");
             
         }
 
