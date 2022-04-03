@@ -2,6 +2,7 @@
 using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,13 +22,14 @@ namespace EconomicManagementAPP.Controllers
             this.signInManager = signInManager;
         }
 
-
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if(!ModelState.IsValid)
@@ -53,7 +55,39 @@ namespace EconomicManagementAPP.Controllers
             }
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+
+            return View();
+        }
+
         [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login (LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await signInManager.PasswordSignInAsync(model.Email,
+                model.Password, model.Rememberme, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Transactions");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Wrong email or password.");
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);

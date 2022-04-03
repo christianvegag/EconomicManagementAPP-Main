@@ -2,13 +2,13 @@
 using EconomicManagementAPP.Filters;
 using EconomicManagementAPP.Models;
 using EconomicManagementAPP.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EconomicManagementAPP.Controllers
 {
     [TypeFilter(typeof(ExceptionManagerFilter))]
-
     public class TransactionsController : Controller
     {
         private readonly IRepositorieTransactions repositorieTransactions;
