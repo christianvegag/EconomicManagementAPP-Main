@@ -4,7 +4,7 @@ using EconomicManagementAPP.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EconomicManagementAPP.Controllers
-{    
+{
     [TypeFilter(typeof(ExceptionManagerFilter))]
     public class AccountTypesController : Controller
     {

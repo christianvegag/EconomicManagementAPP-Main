@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EconomicManagementAPP.Controllers
 {
     [TypeFilter(typeof(ExceptionManagerFilter))]
-
     public class UsersController : Controller
     {
         private readonly UserManager<User> userManager;

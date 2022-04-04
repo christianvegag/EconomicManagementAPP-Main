@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace EconomicManagementAPP.Controllers
 {
     [TypeFilter(typeof(ExceptionManagerFilter))]
-
     public class CategoriesController : Controller
     {
         private readonly IRepositorieCategories repositorieCategories;

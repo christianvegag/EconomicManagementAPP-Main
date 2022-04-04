@@ -1,0 +1,79 @@
+﻿@using static EconomicManagementAPP.Helpers.NavigationIndicatorHelper;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4"> 
+    
+     <a class="brand-link text-decoration-none"  asp-controller="Transactions" asp-action="Index">EconomicManagementAPP</a>
+    <div class="sidebar">
+        @if (SignInManager.IsSignedIn(User))
+        {
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="~/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a class="d-block text-decoration-none">@User.Identity.Name</a>
+            </div>
+          </div>
+        }
+        else
+        {
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="~/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+            </div>
+            <div class="info">
+                <a class="d-block text-decoration-none">Error</a>
+            </div>
+          </div>
+        }
+        <!-- Sidebar Menu -->
+      <nav class="mt-2">
+         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item ">
+                    <a asp-controller="Transactions" asp-action="Index" class="nav-link active @Url.MakeActiveClass("home","index")">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>
+                            Transactions
+                        </p>
+                    </a>
+                </li>
+
+              <li class="nav-item  menu-close">
+                        <a  class="nav-link @Url.MakeActiveClass("home","index")">
+                            <i class="nav-icon fas fa-lock"></i>
+                            <p>
+                                Accounts
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                      <ul class="nav nav-treeview">
+                           <li class="nav-item">
+                                <a asp-controller="Accounts" asp-action="Index" class="nav-link  @Url.MakeActiveClass("home","index")">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>Account</p>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a asp-controller="AccountTypes" asp-action="Index" class="nav-link  @Url.MakeActiveClass("home","index")">
+                                  <i class="far fa-circle nav-icon"></i>
+                                  <p>AccountTypes</p>
+                                </a>
+                              </li>
+                         </ul>
+              </li>
+              <li class="nav-item ">
+                        <a asp-controller="Categories" asp-action="Index" class="nav-link  @Url.MakeActiveClass("home","index")">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>
+                                Categories
+                            </p>
+                        </a>
+              </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

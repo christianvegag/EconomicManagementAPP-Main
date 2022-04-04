@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace EconomicManagementAPP.Controllers
 {
     [TypeFilter(typeof(ExceptionManagerFilter))]
-
     public class OperationTypesController : Controller
     {
         private readonly IRepositorieOperationTypes repositorieOperationTypes;

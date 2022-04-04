@@ -5,28 +5,44 @@
     @if (SignInManager.IsSignedIn(User))
         {
 
-        <li class="nav-item">
-            <span class="nav-link text-dark">Hello, @User.Identity.Name</span>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-action="logout" asp-controller="users">
+      <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"></h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item">
+                 <form class="form-inline" asp-action="logout" asp-controller="users">
                 <button type="submit" class="nav-link btn btn-link text-dark">
                     Logout
                 </button>
             </form>
-        </li>
+              </li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link dark-text" asp-controller="users" asp-action="Register">
-                SignUp
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link dark-text" asp-controller="users" asp-action="Login">
-                LogIn
-            </a>
-        </li>
+     <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"></h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a class="text-decoration-none" asp-action="Register" asp-controller="users">SignUp</a></li>
+              <li class="breadcrumb-item"><a class="text-decoration-none" asp-action="Login" asp-controller="users">Login</a></li>
+
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
     }
 </ul>
