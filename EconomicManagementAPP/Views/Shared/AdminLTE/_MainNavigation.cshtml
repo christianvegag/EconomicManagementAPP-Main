@@ -13,7 +13,10 @@
                 <img src="~/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a class="d-block text-decoration-none">@User.Identity.Name</a>
+                @{ int index = @User.Identity.Name.IndexOf('@'); }
+
+                <a class="d-block text-decoration-none text-uppercase">@User.Identity.Name.Substring(0,index)</a>
+                
             </div>
           </div>
         }
