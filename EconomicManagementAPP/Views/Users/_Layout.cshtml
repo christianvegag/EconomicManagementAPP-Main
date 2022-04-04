@@ -1,35 +1,37 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - EconomicManagementAPP</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/EconomicManagementAPP.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-</head>
-<body class="m-0">
-       <div class="d-flex justify-content-center align-items-center vh-100">
-        <div style="margin-right: 5rem">
-            <h1>
-                Economic Management
-            </h1>
-            <h4>
-                Here you can manage your finances in an optimal and intuitive way
-            </h4>
-        </div>
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-    
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Registration Page (v2)</title>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="~/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="~/css/adminlte.min.css">
+
+</head>
+<body class="hold-transition register-page">
+<div class="login-box">
+  <!-- /.login-logo -->
+  <div class="card card-outline card-primary">
+    
+    @RenderBody()
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<script src="~/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/js/adminlte.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
